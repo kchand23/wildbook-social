@@ -1,4 +1,5 @@
 from googleapiclient.discovery import build
+import time
 
 class YouTube:
     def __init__(self, KEY, db=None):
@@ -97,6 +98,7 @@ class YouTube:
                         "dates": [], #[Wildbook]
                     },
                     "fileDetails": None, #[YouTube]
+                    "gatheredAt": time.ctime(),
                     "relevant": None,
                     "wild": None
                 }
