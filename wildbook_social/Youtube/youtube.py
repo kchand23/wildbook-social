@@ -105,7 +105,7 @@ class YouTube:
 
                 # Saving item in database
                 if (saveTo):
-                    self.db.addVideo(newItem, saveTo)
+                    self.db.addItem(newItem, saveTo)
 
                 modifiedResult.append(newItem)
             

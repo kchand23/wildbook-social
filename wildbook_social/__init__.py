@@ -1,5 +1,5 @@
 from .Youtube.youtube import YouTube
-from .Youtube.database import Database
+from .Database.database import Database
 
 assert all((YouTube, Database))
 

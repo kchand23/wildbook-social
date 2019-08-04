@@ -6,14 +6,14 @@ class Database:
         self.client = MongoClient(key)
         self.db = self.client[database]
         
-    def addVideo(self, payload, collection):
+    def addItem(self, payload, collection):
         try:
             self.db[collection].insert_one(payload)
         except:
             # Item already exists in database
             pass
         
-    def getAllVideos(self, collection):
+    def getAllItems(self, collection):
         res = self.db[collection].find()
         return [x for x in res]
     
@@ -51,9 +51,9 @@ class Database:
     def showStatistics(self, collection):
         #edited here
         total = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True,False]}}]})
-        relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]})
-        wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] })
-        print("Out of {} items, {} are relevant, {} are wild".format(total, relevant, wild))
+        relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]}) / total * 100
+        wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / total * 100
+        print("Out of {} items, {}% are relevant, {}% are wild".format(total, round(relevant,1), round(wild,1)))
              
     def clearCollection(self, collection, msg=''):
         if (msg == 'yes'):
