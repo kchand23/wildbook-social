@@ -18,7 +18,7 @@ class YouTube:
         q - search query, (ex. "Whale Shark")
         limit - number of results (ex. 10 or 100)
         fields - Retrieve only selected fields (ex. True, False)
-        save - Saves all retrieved videos to database (ex. True, False)
+        saveTo - Saves all retrieved videos to provided collection
         '''
         if (saveTo and not self.db):
             saveTo = False
@@ -118,7 +118,6 @@ class YouTube:
         return self.results
     
         
-    
     # Retrueve info about specific video(s)
     def videos(self, id, fields=False):
         searchResult = self.youtube.videos().list(

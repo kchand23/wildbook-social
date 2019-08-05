@@ -1,9 +1,10 @@
 from pymongo import MongoClient
-from IPython.display import YouTubeVideo, display
+from IPython.display import YouTubeVideo, Image, display
 
 class Database:
     def __init__(self, key, database):
         self.client = MongoClient(key)
+        self.dbName = database
         self.db = self.client[database]
         
     def addItem(self, payload, collection):
@@ -21,8 +22,15 @@ class Database:
         i = 1
         while(amount > 0):
             item = self.db[collection].find_one({"$or":[{"relevant":None}, {"wild":None}]})
-            print("{}: {}".format(i, item['title']['original']))
-            display(YouTubeVideo(item['_id']))
+            if not item:
+                break
+            
+            if self.dbName=='youtube':
+                print("{}: {}".format(i, item['title']['original']))
+                display(YouTubeVideo(item['_id']))
+            else:
+                display(Image(item['img_url'], height=100, width=200))
+    
             print("Relevant (y/n):", end =" ")
             rel = True if input() == "y" else False
             
@@ -51,6 +59,9 @@ class Database:
     def showStatistics(self, collection):
         #edited here
         total = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True,False]}}]})
+        if total == 0:
+            print("No videos were processed yet.")
+            return
         relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]}) / total * 100
         wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / total * 100
         print("Out of {} items, {}% are relevant, {}% are wild".format(total, round(relevant,1), round(wild,1)))
