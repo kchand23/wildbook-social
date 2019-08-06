@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 from IPython.display import YouTubeVideo, Image, display
+import dateutil.parser
+import matplotlib.pyplot as plt
 
 class Database:
     def __init__(self, key, database):
@@ -65,6 +67,38 @@ class Database:
         relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]}) / total * 100
         wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / total * 100
         print("Out of {} items, {}% are relevant, {}% are wild".format(total, round(relevant,1), round(wild,1)))
+
+        self.showHistogram(collection)
+
+    def showHistogram(self, collection):
+        res = self.db[collection].find({'wild':True})
+        timePosts = [x['publishedAt'] for x in res]
+        if len(timePosts) < 1:
+            print("No videos were processed yet.")
+            return
+
+        # Convert the times from datetime format to YYYY-MM-DD format
+        dates = [dateutil.parser.parse(x).date() for x in timePosts]
+
+        # sortedDates = []
+        # sorting...
+        # dates = sortedDates
+        
+        # Find the difference in days between posting dates of successive posts
+        lastDate = [dates[0]]
+        timeDiffs = []
+        for date in dates:
+            res = abs(date - lastDate[-1])
+            timeDiffs.append(res.days)
+            lastDate.append(date)
+
+        # Plotting the histogram
+        bins = [x*10 for x in range(11)]
+        plt.hist(timeDiffs, bins = bins, histtype = 'bar', rwidth = 0.8)
+        plt.xlabel('Days between succesive posts')
+        plt.ylabel('Number of posts')
+        plt.title('Histogram for Time Between Succesive Wild Posts')
+        plt.show()
              
     def clearCollection(self, collection, msg=''):
         if (msg == 'yes'):

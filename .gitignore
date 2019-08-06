@@ -1,6 +1,11 @@
 # Mac OS X stuff
 .DS_Store
 
+# Settings files
+*.txt
+*.checkpoint
+!requirements.txt
+
 # Jupiter Notebooks
 # *.ipynb
 
@@ -108,7 +113,3 @@ nohup.out
 
 # VS Code
 .vscode
-
-# Settings files
-*.txt
-*.checkpoint
