@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from IPython.display import YouTubeVideo, Image, display
+from datetime import timedelta
 import dateutil.parser
 import matplotlib.pyplot as plt
 
@@ -71,29 +72,35 @@ class Database:
         self.showHistogram(collection)
 
     def showHistogram(self, collection):
+        keys = {'youtube': 'publishedAt', 'twitter': 'created_at'}
+
         res = self.db[collection].find({'wild':True})
-        timePosts = [x['publishedAt'] for x in res]
+        timePosts = [x[keys[self.dbName]] for x in res]
         if len(timePosts) < 1:
             print("No videos were processed yet.")
             return
 
         # Convert the times from datetime format to YYYY-MM-DD format
         dates = [dateutil.parser.parse(x).date() for x in timePosts]
-
-        # sortedDates = []
-        # sorting...
-        # dates = sortedDates
+        dates.sort()
         
         # Find the difference in days between posting dates of successive posts
+        smallestDifference = timedelta(100000)
+        largestDifference = timedelta(0)
         lastDate = [dates[0]]
         timeDiffs = []
         for date in dates:
             res = abs(date - lastDate[-1])
+            largestDifference = res if res > largestDifference else largestDifference
+            smallestDifference = res if res < smallestDifference else smallestDifference
             timeDiffs.append(res.days)
             lastDate.append(date)
 
+        # diffInDays = (largestDifference - smallestDifference).days
+
         # Plotting the histogram
         bins = [x*10 for x in range(11)]
+        plt.figure(figsize=(15,5))
         plt.hist(timeDiffs, bins = bins, histtype = 'bar', rwidth = 0.8)
         plt.xlabel('Days between succesive posts')
         plt.ylabel('Number of posts')
