@@ -99,9 +99,10 @@ class Database:
         # diffInDays = (largestDifference - smallestDifference).days
 
         # Plotting the histogram
-        bins = [x*10 for x in range(11)]
+        #bins = [x*10 for x in range(11)]
         plt.figure(figsize=(15,5))
-        plt.hist(timeDiffs, bins = bins, histtype = 'bar', rwidth = 0.8)
+        #changed bins = 10, allowing for 10 dynamic categories to be created based on data. Functionality of matplotlib. 
+        plt.hist(timeDiffs, bins = 10, histtype = 'bar', rwidth = 0.8)  
         plt.xlabel('Days between succesive posts')
         plt.ylabel('Number of posts')
         plt.title('Histogram for Time Between Succesive Wild Posts')
