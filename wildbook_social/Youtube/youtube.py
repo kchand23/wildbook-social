@@ -33,7 +33,7 @@ class YouTube:
             searchResult = self.youtube.search().list(
                 q=q,
                 part='snippet',
-                order = 'date',
+                #order = 'date',
                 fields='nextPageToken,items(id,snippet(publishedAt,title))',
 #                 fields='nextPageToken,pageInfo(totalResults),items(id,snippet(publishedAt,channelId,title,description))' if fields else '*',
                 type='video',
