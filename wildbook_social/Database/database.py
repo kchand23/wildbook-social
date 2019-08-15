@@ -135,14 +135,23 @@ class Database:
     #customized to youtube only so far
     def heatmap(self,collection, csvName):
         self.csvName = csvName +'.csv'
-        docs_w_loc = self.db[collection].find({'$and': [{'wild': True}, {'newLocation':{'$ne':0}}]})
+        #docs_w_loc = self.db[collection].find({'$and': [{'wild': True}, {'newLocation':{'$ne':0}}]})
+        docs_w_loc = self.db[collection].find({'newLocation':{'$ne':0}})
         loc_list = []
         for doc in docs_w_loc:
-            dic = {
-                'videoID' : doc['videoID'],
-                'newLocation':doc['newLocation']
-            }
-            loc_list.append(dic)
+            try:
+                dic = {
+                    'videoID' : doc['videoID'],
+                    'newLocation':doc['newLocation']
+                }
+                loc_list.append(dic)
+                #print(doc)
+            except KeyError:
+                if KeyError == 'newLocation':
+                    pass
+            
+            
+           
         
         fields = ['videoID', 'newLocation'] 
         with open(self.csvName, 'w') as locations_csv:
