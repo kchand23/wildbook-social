@@ -148,10 +148,7 @@ class Database:
                 #print(doc)
             except KeyError:
                 if KeyError == 'newLocation':
-                    pass
-            
-            
-           
+                    pass     
         
         fields = ['videoID', 'newLocation'] 
         with open(self.csvName, 'w') as locations_csv:
