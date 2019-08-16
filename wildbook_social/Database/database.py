@@ -41,7 +41,13 @@ class Database:
             #edited here
             if rel == True:
                 print("Wild (y/n):", end =" ")
-                wild = True if input() == "y" else False
+                #wild = True if input() == "y" else False -EDITED:
+                if input() == 'y':
+                    wild = True
+                else:
+                    wild = False
+                    if self.dbName == 'youtube':
+                        loc = 0
                 if wild == True:
                     
                     #add in location option, only for youtube videos
