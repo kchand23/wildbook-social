@@ -96,9 +96,16 @@ class Database:
         if total == 0:
             print("No videos were processed yet.")
             return
-        relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]}) / total * 100
-        wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / total * 100
-        print("Out of {} items, {}% are relevant, {}% are wild".format(total, round(relevant,1), round(wild,1)))
+        #relevant count used for determining % of wild from relevant amount of items
+        relevant_count = self.db[collection].count_documents({ "$and": [{"relevant":True}]})
+        # %relevant caluclated out of total
+        relevant = self.db[collection].count_documents({ "$and": [{"relevant":True}]}) / total * 100 
+        # %wild calculated out of ONLY relevant items, this way the remaining percent can be
+        # assumed to be % of zoo sightings
+        wild = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / relevant_count * 100
+        # %wild calculated out of total
+        wild_tot = self.db[collection].count_documents({ "$and": [{"relevant":{"$in":[True]}}, {"wild":True}] }) / total * 100
+        print("Out of {} items, {}% are relevant. From those that are relevant, {}% are wild. Out of the total, {}% are wild".format(total, round(relevant,1), round(wild,1), round(wild_tot, 1)))
 
         self.showHistogram(collection)
 
