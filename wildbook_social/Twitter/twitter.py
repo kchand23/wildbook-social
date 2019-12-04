@@ -1,7 +1,9 @@
 import tweepy
+import time
 
 class Twitter:
     def __init__(self, credentials, db=None):
+
         self.CONSUMER_KEY = credentials["CONSUMER_KEY"]
         self.CONSUMER_SECRET = credentials["CONSUMER_SECRET"]
         self.ACCESS_TOKEN = credentials["ACCESS_TOKEN"]
@@ -14,6 +16,7 @@ class Twitter:
         self.db = db
         
     def search(self, q, date_since="2018-11-16", limit=1, saveTo=False):
+        
         ''' 
         q - search query, (ex. "Whale Shark")
         limit - number of results (ex. 10 or 100)
@@ -28,35 +31,47 @@ class Twitter:
         
         #loops through to get certain information
         for tweet in tweets:
-            
-            tweetDic = {}
 
             #if there is a media key in entities then get the user name, location,
             #id, date created. url and hashtags from the post
             if (self._checkMedia(tweet) != False) and (tweet.retweeted == False) :
-                
-                tweetId = tweet.id_str
-                createdAt = str(tweet.created_at)
-                url = self._checkMedia(tweet)
-                self._checkExtendedEntities(tweet)
-                user_name = tweet.user.name
-                location = tweet.user.location
-                user_id = tweet.user.id_str
-                hashtags = tweet.entities["hashtags"]
-                
-                tweetDic["_id"] = tweetId
-                tweetDic["created_at"] = createdAt
-                tweetDic["location"] = location
-                tweetDic["user_id"] = user_id
-                tweetDic["img_url"] = str(url)
-                tweetDic["user_name"] = user_name
-                tweetDic["hashtags"] = hashtags
+
+
+    
+                newItem = {
+                        "_id" : tweet.id_str,
+                        "uploadedAt" : str(tweet.created_at),
+                        "url" : self._checkMedia(tweet),
+                        "description" : tweet.text,
+                        "user_id" : tweet.user.id_str,
+                        "user_name" : tweet.user.name,
+                        "user_location" : tweet.user.location, #Twitter
+                        "hashtags" : tweet.entities["hashtags"],
+                        
+
+
+                        "encounter": {
+                            "locationIDs": [], #[Wildbook]
+                            "dates": [], #[Wildbook]
+                        },
+                        "animalsID": [], #[Wildbook]
+                        "curationStatus": None, #[Wildbook]
+                        "curationDecision": None, #[Wildbook]
+
+
+
+                        "gatheredAt" : time.ctime(),
+                        "relevant" : None,
+                        "wild" : None,
+                        "type" : "twitter"
+                    }
+
 
                 # Saving item in database
                 if (saveTo):
-                    self.db.addItem(tweetDic, saveTo)
+                    self.db.addItem(newItem, saveTo)
 
-                results.append(tweetDic)
+                results.append(tweet)
                 
         return results
                 

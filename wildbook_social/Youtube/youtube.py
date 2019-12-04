@@ -62,6 +62,7 @@ class YouTube:
                 # try:
                 newItem = {
                     "_id": item['id']['videoId'],
+                    
                     "videoID": item['id']['videoId'],
                     "title": {
                         "original": item['snippet'].get('title', None),
@@ -101,7 +102,8 @@ class YouTube:
                     "fileDetails": None, #[YouTube]
                     "gatheredAt": time.ctime(),
                     "relevant": None,
-                    "wild": None
+                    "wild": None,
+                    "type" : "youtube"
                 }
                 # except:
                 #     print(item)

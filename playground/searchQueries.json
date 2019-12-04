@@ -1,0 +1,31 @@
+{
+  "whale shark": {
+    "twitter": [ "whale shark" ],
+    "youtube": [ "whale shark" ]
+  },
+
+  "humpback whale": {
+    "twitter": [ "humpback whales" ],
+    "youtube": [ "" ]
+  },
+
+  "iberian lynx": {
+    "twitter": [ "iberian lynx" ],
+    "youtube": [ "" ]
+  },
+
+  "grevy zebra": {
+    "twitter": [ "grevy zebra" ],
+    "youtube": [ "" ]
+  },
+
+  "plains zebra": {
+    "twitter": [ "plains zebra" ],
+    "youtube": [ "" ]
+  },
+
+  "reticulated giraffe": {
+    "twitter": [ "reticulated giraffe" ],
+    "youtube": [ "" ]
+  }
+}
